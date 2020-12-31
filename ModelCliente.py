@@ -53,9 +53,18 @@ class Cliente:
 
         self.cursor.execute(add_cliente)
         self.cnx.commit()
+
+    def getlist(self):
+
+        quary = ("SELECT * FROM Cliente")
+        self.cursor.execute(quary)
+
+        for registro in self.cursor:
+            print(f'Id: {registro[0]} | Nome: {registro[1]} {registro[2]} | '
+                  f'Endereço: {registro[3]} | Telefone: {registro[4]} | Status: {registro[5]}')
+
         self.cursor.close()
         self.cnx.close()
-
 
     def altera_endereco(self, endereco):
         self.endereco = endereco
@@ -85,3 +94,5 @@ class Cliente:
 
 
 
+teste = Cliente()
+teste.getlist()
