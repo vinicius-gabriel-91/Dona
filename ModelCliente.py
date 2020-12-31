@@ -1,15 +1,30 @@
+import mysql.connector
+
 class Cliente:
-    def __init__(self,id, nome, endereco, telefone):
-        self.__id = id
-        self._nome = nome
-        self.endereco = endereco
-        self.telefone = telefone
-        self.status = True
+    __id = None
+    _nome = None
+    endereco = None
+    telefone = None
+    status = None
+    _sobrenome = None
+
+    def __init__(self):
+
+        config = {
+            'user': 'admin',
+            'password': 'password',
+            'host': '127.0.0.1',
+            'database': 'Dona',
+            'raise_on_warnings': True
+        }
+
+        self.cnx = mysql.connector.connect(**config)
+        self.cursor = self.cnx.cursor()
 
     def __str__(self):
-        return f'{self.id} - {self._nome} - {self.endereco} - {self.telefone} - {self.status}'
+        return f'{self.id} - {self._nome} - {self._sobrenome} - {self.endereco} - {self.telefone} - {self.status}'
 
-# --------------------PROPRIEDADES---------------------------------------------------------
+    # --------------------PROPRIEDADES---------------------------------------------------------
 
     @property
     def id(self):
@@ -23,11 +38,30 @@ class Cliente:
     def nome(self, nome):
         self._nome = nome
 
+    # -----------------------METODOS-------------------------------------------------------------
 
-# -----------------------METODOS-------------------------------------------------------------
+    def inclui_cliente(self, nome, sobrenome, endereco = 'null', telefone=000000000, status = False):
+        self.nome = nome
+        self._sobrenome = sobrenome
+        self.endereco = endereco
+        self.telefone = telefone
+        self.status = status
+
+        add_cliente = (f'INSERT INTO Cliente '
+                       '(idCliente, nome, sobrenome, telefone, endereco, status) '
+                       f'VALUES (null, "{nome}", "{sobrenome}", {endereco}, {telefone}, {status})')
+
+        self.cursor.execute(add_cliente)
+        self.cnx.commit()
+        self.cursor.close()
+        self.cnx.close()
+
 
     def altera_endereco(self, endereco):
         self.endereco = endereco
+
+    def altera_telefone(self, telefone):
+        self.telefone = telefone
 
     def altera_status(self):
         if (self.status):
@@ -36,8 +70,8 @@ class Cliente:
             status = "Desativado"
 
         resposta = input(f'O cliente: {self.id}\n'
-              f'Atualmente esta como: {status}\n'
-              f'Deseja altera-lo?: S ou N\n')
+                         f'Atualmente esta como: {status}\n'
+                         f'Deseja altera-lo?: S ou N\n')
         resposta = resposta.title()
 
         if (resposta == 'S'):
@@ -48,7 +82,6 @@ class Cliente:
         elif (resposta == 2):
             self.status = False
             print(f'Pedido {self.id} marcado como Desativado')
-
 
 
 
