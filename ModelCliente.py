@@ -40,7 +40,7 @@ class Cliente:
 
     # -----------------------METODOS-------------------------------------------------------------
 
-    def inclui_cliente(self, nome, sobrenome, endereco = 'null', telefone=000000000, status = False):
+    def inclui_cliente(self, nome, sobrenome, telefone=000000000, endereco = 'null', status = False):
         self.nome = nome
         self._sobrenome = sobrenome
         self.endereco = endereco
@@ -48,14 +48,13 @@ class Cliente:
         self.status = status
 
         add_cliente = (f'INSERT INTO Cliente '
-                       '(idCliente, nome, sobrenome, telefone, endereco, status) '
-                       f'VALUES (null, "{nome}", "{sobrenome}", {endereco}, {telefone}, {status})')
+                       '(id, nome, sobrenome, telefone, endereco, status) '
+                       f'VALUES (null, "{nome}", "{sobrenome}", "{telefone}", "{endereco}", {status})')
 
         self.cursor.execute(add_cliente)
         self.cnx.commit()
 
-    def getlist(self):
-
+    def get_list(self):
         quary = ("SELECT * FROM Cliente")
         self.cursor.execute(quary)
 
@@ -63,8 +62,18 @@ class Cliente:
             print(f'Id: {registro[0]} | Nome: {registro[1]} {registro[2]} | '
                   f'Endereço: {registro[3]} | Telefone: {registro[4]} | Status: {registro[5]}')
 
-        self.cursor.close()
-        self.cnx.close()
+
+    def get_info(self,telefone):
+        quary = (f"SELECT id, nome, sobrenome, telefone, endereco, status from Cliente WHERE telefone = '{telefone}'")
+        self.cursor.execute(quary)
+
+        for registro in self.cursor:
+            print(f'Id: {registro[0]} | Nome: {registro[1]} {registro[2]} | '
+                  f'Telefone: {registro[3]} | Endereço: {registro[4]} | Status: {registro[5]}')
+
+        row = self.cursor.fetchone()
+        if (row == None):
+            print("Registro não encontrado! Tente novamente.")
 
     def altera_endereco(self, endereco):
         self.endereco = endereco
@@ -92,7 +101,3 @@ class Cliente:
             self.status = False
             print(f'Pedido {self.id} marcado como Desativado')
 
-
-
-teste = Cliente()
-teste.getlist()
