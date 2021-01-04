@@ -1,4 +1,5 @@
 import mysql.connector
+import phonenumbers
 
 class Cliente:
     __id = None
@@ -40,12 +41,14 @@ class Cliente:
 
     # -----------------------METODOS-------------------------------------------------------------
 
-    def inclui_cliente(self, nome, sobrenome, telefone=000000000, endereco = 'null', status = False):
+    def inclui_cliente(self, nome, sobrenome, telefone, endereco = 'null', status = False):
         self.nome = nome
         self._sobrenome = sobrenome
         self.endereco = endereco
         self.telefone = telefone
         self.status = status
+
+        telefone = self.formata_telefone(telefone)
 
         add_cliente = (f'INSERT INTO Cliente '
                        '(id, nome, sobrenome, telefone, endereco, status) '
@@ -105,6 +108,7 @@ class Cliente:
             print("Alteração realizada!")
         elif (escolha == 3):
             update = input("Digite o novo telefone:\n")
+            update = self.formata_telefone(update)
             quary = (f'update Cliente set telefone = "{update}" where id = {id}')
             self.cursor.execute(quary)
             self.cnx.commit()
@@ -121,5 +125,16 @@ class Cliente:
         self.cursor.close()
         self.cnx.close()
 
+    def formata_telefone(self,telefone):
 
+        telefone = phonenumbers.parse(telefone, "BR")
+        verificacao = phonenumbers.is_possible_number(telefone)
+
+        while not verificacao:
+            telefone = input('Numero invalido! Digite um telefone apenas com os digitos + codigo da cidade:\n')
+            telefone = phonenumbers.parse(telefone, "BR")
+            verificacao = phonenumbers.is_possible_number(telefone)
+
+        tel_formatado = phonenumbers.format_number(telefone, phonenumbers.PhoneNumberFormat.NATIONAL)
+        return tel_formatado
 

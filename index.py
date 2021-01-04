@@ -7,10 +7,10 @@ escolha = int(input('Qual ação deseja efetuar:\n'))
 while (escolha != 0):
 
     if (escolha == 1):
-        nome = input('Digite o nome do cliente:\n')
-        sobrenome = input('Digite o sobrenome do cliente:\n')
-        telefone = int(input('Digite o telefone do cliente:\n'))
-        endereco = input('Digite o endereco de entrega:\n')
+        nome = input('Digite o nome do cliente:\n').title().strip()
+        sobrenome = input('Digite o sobrenome do cliente:\n').title().strip()
+        telefone = input('Digite o telefone do cliente:\n')
+        endereco = input('Digite o endereco de entrega:\n').strip()
         cliente = Cliente()
         cliente.inclui_cliente(nome,sobrenome,telefone,endereco)
     elif (escolha == 2):
