@@ -53,6 +53,7 @@ class Cliente:
 
         self.cursor.execute(add_cliente)
         self.cnx.commit()
+        print("Cliente cadastrado com sucesso!")
 
     def get_list(self):
         quary = ("SELECT * FROM Cliente")
@@ -71,33 +72,49 @@ class Cliente:
             print(f'Id: {registro[0]} | Nome: {registro[1]} {registro[2]} | '
                   f'Telefone: {registro[3]} | Endereço: {registro[4]} | Status: {registro[5]}')
 
-        row = self.cursor.fetchone()
-        if (row == None):
-            print("Registro não encontrado! Tente novamente.")
 
-    def altera_endereco(self, endereco):
-        self.endereco = endereco
+    def deleta_cliente(self,id):
+        quary = (f'DELETE FROM Cliente WHERE id = {id}')
+        self.cursor.execute(quary)
+        self.cnx.commit()
+        print("Cliente deletado com sucesso")
 
-    def altera_telefone(self, telefone):
-        self.telefone = telefone
-
-    def altera_status(self):
-        if (self.status):
-            status = "Ativo"
+    def altera_cliente(self,id):
+        quary = (f"SELECT id, nome, sobrenome, telefone, endereco, status from Cliente WHERE id = {id}")
+        self.cursor.execute(quary)
+        for registro in self.cursor:
+            print(f'Id: {registro[0]} | Nome: {registro[1]} {registro[2]} | '
+                  f'Telefone: {registro[3]} | Endereço: {registro[4]} | Status: {registro[5]}')
+        escolha = int(input("qual informação deseja alterar?\n"
+                            "(1)Nome | (2)Sobrenome | (3)Telefone | (4)Endereço\n"))
+        if (escolha == 1):
+            update = input("Digite o novo nome:\n")
+            quary = (f'update Cliente set nome = "{update}" where id = {id}')
+            self.cursor.execute(quary)
+            self.cnx.commit()
+            print("Alteração realizada!")
+        elif (escolha == 2):
+            update = input("Digite o novo sobrenome:\n")
+            quary = (f'update Cliente set sobrenome = "{update}" where id = {id}')
+            self.cursor.execute(quary)
+            self.cnx.commit()
+            print("Alteração realizada!")
+        elif (escolha == 3):
+            update = input("Digite o novo telefone:\n")
+            quary = (f'update Cliente set telefone = "{update}" where id = {id}')
+            self.cursor.execute(quary)
+            self.cnx.commit()
+            print("Alteração realizada!")
+        elif (escolha == 4):
+            update = input("Digite o novo endereço:\n")
+            quary = (f'update Cliente set endereco = "{update}" where id = {id}')
+            self.cursor.execute(quary)
+            self.cnx.commit()
+            print("Alteração realizada!")
         else:
-            status = "Desativado"
+            print('Escolha invalida! Tente novamente.')
 
-        resposta = input(f'O cliente: {self.id}\n'
-                         f'Atualmente esta como: {status}\n'
-                         f'Deseja altera-lo?: S ou N\n')
-        resposta = resposta.title()
 
-        if (resposta == 'S'):
-            resposta = int(input('Como deseja marcar o cliente?: (1)Ativo (2)Desativado\n'))
-        if (resposta == 1):
-            self.status = True
-            print(f'Cliente {self.id} marcado como Ativo')
-        elif (resposta == 2):
-            self.status = False
-            print(f'Pedido {self.id} marcado como Desativado')
+
+
 
