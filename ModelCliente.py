@@ -61,8 +61,9 @@ class Cliente:
 
         for registro in self.cursor:
             print(f'Id: {registro[0]} | Nome: {registro[1]} {registro[2]} | '
-                  f'Endereço: {registro[3]} | Telefone: {registro[4]} | Status: {registro[5]}')
-
+                  f'Telefone: {registro[3]} | Endereço: {registro[4]} | Status: {registro[5]}')
+        self.cursor.close()
+        self.cnx.close()
 
     def get_info(self,telefone):
         quary = (f"SELECT id, nome, sobrenome, telefone, endereco, status from Cliente WHERE telefone = '{telefone}'")
@@ -71,13 +72,16 @@ class Cliente:
         for registro in self.cursor:
             print(f'Id: {registro[0]} | Nome: {registro[1]} {registro[2]} | '
                   f'Telefone: {registro[3]} | Endereço: {registro[4]} | Status: {registro[5]}')
-
+        self.cursor.close()
+        self.cnx.close()
 
     def deleta_cliente(self,id):
         quary = (f'DELETE FROM Cliente WHERE id = {id}')
         self.cursor.execute(quary)
         self.cnx.commit()
         print("Cliente deletado com sucesso")
+        self.cursor.close()
+        self.cnx.close()
 
     def altera_cliente(self,id):
         quary = (f"SELECT id, nome, sobrenome, telefone, endereco, status from Cliente WHERE id = {id}")
@@ -114,7 +118,8 @@ class Cliente:
         else:
             print('Escolha invalida! Tente novamente.')
 
-
+        self.cursor.close()
+        self.cnx.close()
 
 
 
